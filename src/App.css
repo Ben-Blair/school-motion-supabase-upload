@@ -1,0 +1,201 @@
+/* Simple two-column layout: file list + player */
+
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 320px;
+  max-width: 100%;
+  padding: 16px;
+  border-right: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sidebar-top h1 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.warn {
+  margin: 0;
+  color: #856404;
+}
+
+.err {
+  margin: 0;
+  color: #c00;
+}
+
+.search {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.9rem;
+}
+
+.search label {
+  display: block;
+}
+
+.search input {
+  padding: 6px 8px;
+  font: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.search-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.search-actions button {
+  padding: 6px 10px;
+  font: inherit;
+}
+
+.search-ok {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #256d25;
+}
+
+.file-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #ccc;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.file-row {
+  border-bottom: 1px solid #eee;
+}
+
+.file-row:last-child {
+  border-bottom: none;
+}
+
+.file-row.empty {
+  padding: 12px;
+  color: #666;
+}
+
+.file-row.selected {
+  background: #f0f0f0;
+}
+
+.file-btn {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: none;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.file-btn:hover:not(:disabled) {
+  background: #f5f5f5;
+}
+
+.file-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.main {
+  flex: 1;
+  padding: 16px;
+}
+
+.hint {
+  margin: 0;
+  color: #666;
+}
+
+.field-error {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #c00;
+}
+
+.player {
+  max-width: 900px;
+}
+
+.player-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.player-top h2 {
+  margin: 0;
+  font-size: 1rem;
+  word-break: break-all;
+}
+
+.player-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.player video {
+  width: 100%;
+  max-height: 70vh;
+  background: #000;
+}
+
+.time-weather {
+  border: 1px solid #ccc;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 0.9rem;
+}
+
+.tw-label {
+  font-size: 0.75rem;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.tw-line {
+  margin: 0;
+}
+
+.tw-muted {
+  margin: 0;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.tw-weather {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tw-weather .tw-line {
+  flex: 1;
+  min-width: 0;
+}

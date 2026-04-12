@@ -1,0 +1,10 @@
+# Python upload pipeline (Motion → Supabase Storage). Use a venv:
+#   python -m venv .venv
+#   .venv\Scripts\activate   # Windows
+#   source .venv/bin/activate  # macOS / Linux
+#   pip install -r requirements.txt
+#
+# See scripts/upload_video_to_supabase.py for usage.
+
+supabase>=2.28,<3
+ffmpeg-python>=0.2,<1
