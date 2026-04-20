@@ -3,25 +3,46 @@ import { supabase, bucket, missingEnv } from './lib/supabaseClient'
 import { parseSearchQuery } from './lib/searchValidation'
 import './App.css'
 
+// =============================================================================
+// WEATHER — OpenWeatherMap (Boulder, CO). Key: VITE_OPENWEATHER_API_KEY in .env.local
+// =============================================================================
 const OPENWEATHER_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY ?? ''
 const BOULDER = { lat: 40.014986, lon: -105.270546 }
 
 export default function App() {
+  // ===========================================================================
+  // SUPABASE — env check, bucket file list, loading/errors, video + signed URL
+  // ===========================================================================
   const envError = missingEnv()
 
   const [files, setFiles] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const [searchInput, setSearchInput] = useState('')
-  const [appliedQuery, setAppliedQuery] = useState('')
-  const [searchError, setSearchError] = useState(null)
+
   const [selected, setSelected] = useState(null)
   const [videoUrl, setVideoUrl] = useState(null)
 
+  // ===========================================================================
+  // SEARCH — draft text, applied filter, validation (filters Supabase list)
+  // ===========================================================================
+  const [searchInput, setSearchInput] = useState('')
+  const [appliedQuery, setAppliedQuery] = useState('')
+  const [searchError, setSearchError] = useState(null)
+
+  // ===========================================================================
+  // TIME — local clock (sidebar footer)
+  // ===========================================================================
   const [now, setNow] = useState(new Date())
+
+  // ===========================================================================
+  // WEATHER — OpenWeather fetch result + error (sidebar footer)
+  // ===========================================================================
   const [weather, setWeather] = useState(null)
   const [weatherError, setWeatherError] = useState(null)
 
+  // ---------------------------------------------------------------------------
+  // Supabase: load .mp4 file names from bucket root
+  // ---------------------------------------------------------------------------
   async function loadFiles() {
     if (envError) return
     setLoading(true)
@@ -38,15 +59,24 @@ export default function App() {
     setFiles((data ?? []).filter((f) => f.name.toLowerCase().endsWith('.mp4')))
   }
 
+  // ---------------------------------------------------------------------------
+  // Supabase: initial list on mount
+  // ---------------------------------------------------------------------------
   useEffect(() => {
     loadFiles()
   }, [])
 
+  // ---------------------------------------------------------------------------
+  // Time: tick every second
+  // ---------------------------------------------------------------------------
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000)
     return () => clearInterval(id)
   }, [])
 
+  // ---------------------------------------------------------------------------
+  // Weather: one request on mount (skipped if no API key)
+  // ---------------------------------------------------------------------------
   useEffect(() => {
     if (!OPENWEATHER_KEY) return
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${BOULDER.lat}&lon=${BOULDER.lon}&units=imperial&appid=${OPENWEATHER_KEY}`
@@ -61,6 +91,9 @@ export default function App() {
       .catch((e) => setWeatherError(e.message))
   }, [])
 
+  // ---------------------------------------------------------------------------
+  // Supabase: signed URL when user selects a file (for <video src>)
+  // ---------------------------------------------------------------------------
   useEffect(() => {
     if (!selected) {
       setVideoUrl(null)
@@ -75,6 +108,9 @@ export default function App() {
       })
   }, [selected])
 
+  // ---------------------------------------------------------------------------
+  // Search: filtered list (uses files from Supabase)
+  // ---------------------------------------------------------------------------
   const visible = appliedQuery
     ? files.filter((f) =>
         f.name.toLowerCase().includes(appliedQuery.toLowerCase()),
@@ -101,6 +137,7 @@ export default function App() {
   return (
     <div className="app">
       <aside className="sidebar">
+        {/* --- Header + refresh --- */}
         <div className="sidebar-top">
           <h1>Videos</h1>
           <button onClick={loadFiles} disabled={!!envError || loading}>
@@ -108,9 +145,11 @@ export default function App() {
           </button>
         </div>
 
+        {/* ========== SUPABASE: config / API messages ========== */}
         {envError && <p className="warn">{envError}</p>}
         {error && <p className="err">{error}</p>}
 
+        {/* ========== SEARCH ========== */}
         <form className="search-form" onSubmit={handleSearchSubmit}>
           <input
             type="search"
@@ -130,6 +169,7 @@ export default function App() {
           </div>
         </form>
 
+        {/* ========== SUPABASE: file list (click to play) ========== */}
         <ul className="file-list">
           {visible.length === 0 && !loading && !envError && (
             <li className="file-row empty">No videos found.</li>
@@ -147,7 +187,10 @@ export default function App() {
         </ul>
 
         <div className="info">
+          {/* ========== TIME ========== */}
           <div>{now.toLocaleTimeString()}</div>
+
+          {/* ========== WEATHER ========== */}
           {!OPENWEATHER_KEY && (
             <div className="muted">Set VITE_OPENWEATHER_API_KEY for weather.</div>
           )}
@@ -162,6 +205,8 @@ export default function App() {
 
       <main className="main">
         {!selected && <p className="hint">Select a video to play.</p>}
+
+        {/* ========== SUPABASE: video player (signed URL) ========== */}
         {selected && (
           <div className="player">
             <div className="player-top">
