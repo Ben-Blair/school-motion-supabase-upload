@@ -11,11 +11,7 @@ Motion camera clips are uploaded to **Supabase Storage** with the Python scripts
 
 ## Web app (bucket browser)
 
-1. Copy `.env.example` to `.env.local` and set:
-
-   - `VITE_SUPABASE_URL` — Project URL (Supabase → Settings → API).
-   - `VITE_SUPABASE_ANON_KEY` — `anon` `public` key.
-   - `VITE_SUPABASE_BUCKET` — Storage bucket name (must match your bucket).
+1. Copy `.env.example` to `.env.local` and set `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, and `VITE_SUPABASE_BUCKET`.
 
 2. Install and run:
 
